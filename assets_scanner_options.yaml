@@ -1,0 +1,5 @@
+# path: "lib/constants"
+path: "lib/config/constants"
+className: "Assets"
+fileName: "assets"
+ignoreComment: true

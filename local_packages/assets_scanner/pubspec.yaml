@@ -1,0 +1,18 @@
+name: assets_scanner
+description: assets_scanner helps you generate assets path constants to r.dart file, you can preview the images assets by hovering over the constants.
+version: 2.0.0
+homepage: https://github.com/littleGnAl/assets-scanner
+
+environment:
+  sdk: '>=2.12.0 <3.0.0'
+
+dependencies:
+  build: ^2.0.0
+  path: ^1.8.0
+  glob: ^2.0.0
+  yaml: ^3.1.0
+  meta: ^1.3.0
+
+dev_dependencies:
+  test: ^1.16.8
+  build_test: ^2.0.0

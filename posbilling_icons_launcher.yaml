@@ -1,0 +1,11 @@
+# For Parking Ticket App
+
+icons_launcher:
+  image_path: 'assets/images/counter_token.png'
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
+    windows:
+      enable : true

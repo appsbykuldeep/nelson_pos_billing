@@ -1,0 +1,4 @@
+node_modules
+mysql_backups
+uploads
+/js/common/error_log/
