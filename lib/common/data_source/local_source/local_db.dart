@@ -32,6 +32,9 @@ class LocalDb implements DisposeClass {
   int get siteId => LoginUtil.instance.siteId;
 
   Future<void> initDB() async {
+    if (1 == 1) {
+      return;
+    }
     try {
       var databasesPath = await getDatabasesPath();
       String path = join(databasesPath, 'pos_billing.db');

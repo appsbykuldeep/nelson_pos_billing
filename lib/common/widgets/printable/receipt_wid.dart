@@ -112,8 +112,8 @@ class ReceiptPrintableWid {
                 child: Align(
                   alignment: AlignmentGeometry.centerRight,
                   child: Text(
-                    DateTime.now().custumDateFormat("dd-MM-yyy hh:mm:ss a"),
-                    style: mediumStyle,
+                    DateTime.now().custumDateFormat("dd-MM-yyy\nhh:mm:ss a"),
+                    style: smallStyle.copyWith(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.right,
                   ),
                 ),
