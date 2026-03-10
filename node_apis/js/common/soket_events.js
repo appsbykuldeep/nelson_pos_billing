@@ -13,6 +13,7 @@ const appEvents = {
     saveReceipts: "SaveReceipts",
     saveAllReceipts: "SaveAllReceipts",
     getDailyUserWiseSaleReport: "GetDailyUserWiseSaleReport",
+    getDailyItemWiseSaleReport: "GetDailyItemWiseSaleReport",
     getSaleHistoryWithItems: "GetSaleHistoryWithItems",
 
 };

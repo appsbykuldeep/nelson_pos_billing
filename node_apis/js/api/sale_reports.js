@@ -22,6 +22,19 @@ async function getDailyUserWiseSaleReport(data) {
 }
 
 
+async function getDailyItemWiseSaleReport(data) {
+    let siteId = data?.siteId;
+    let fromDate = data?.fromDate;
+    let tillDate = data?.tillDate;
+    let userId = data?.userId;
+
+    let query = `call getDailyItemWiseSaleReport('${siteId}', '${fromDate}', '${tillDate}', '${userId}');`;
+    return  await db.runMySQLQueryAndParseResult(query);
+   
+
+}
+
+
 async function getSaleHistoryWithItems(data) {
     let siteId = data?.siteId;
     let fromDate = data?.fromDate;
@@ -78,6 +91,11 @@ function registerEvensInSocket(socket) {
 
     socket.on(appEvents.getDailyUserWiseSaleReport, async (data, callback) => {
         callback(await getDailyUserWiseSaleReport(data));
+    });
+
+
+    socket.on(appEvents.getDailyItemWiseSaleReport, async (data, callback) => {
+        callback(await getDailyItemWiseSaleReport(data));
     });
 
     socket.on(appEvents.getSaleHistoryWithItems, async (data, callback) => {

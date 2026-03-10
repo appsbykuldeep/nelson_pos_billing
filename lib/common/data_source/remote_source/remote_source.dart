@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pos_billing/common/classes/socketio_handler.dart';
 import 'package:pos_billing/common/models/item/item_info.dart';
 import 'package:pos_billing/common/models/sale/receipt_info.dart';
+import 'package:pos_billing/common/models/sale_reports/itemwise_sale_report.dart';
 import 'package:pos_billing/common/models/sale_reports/user_wise_sale_report.dart';
 import 'package:pos_billing/common/singletons/login_ctrl.dart';
 import 'package:pos_billing/common/singletons/receipt_no_cache.dart';
@@ -25,13 +26,30 @@ class RemoteSource {
       SoketEvents.getDailyUserWiseSaleReport,
       {
         "siteId": _login.siteId,
-        "fromDate": dateRange.start.fromdateFormat,
-        "tillDate": dateRange.end.tilldateFormat,
+        "fromDate": dateRange.start.toINDDateTime.fromdateFormat,
+        "tillDate": dateRange.end.toINDDateTime.tilldateFormat,
         "userId": userId,
       },
     );
 
     return UserWiseSaleReport.fetchList(data.resultData, fromServer: true);
+  }
+
+  Future<List<ItemwiseSaleReport>> getDailyItemWiseSaleReport({
+    required DateTimeRange dateRange,
+    int userId = 0,
+  }) async {
+    final data = await SocketIoHandler.emitWithResponseForCurrentUser(
+      SoketEvents.getDailyItemWiseSaleReport,
+      {
+        "siteId": _login.siteId,
+        "fromDate": dateRange.start.toINDDateTime.fromdateFormat,
+        "tillDate": dateRange.end.toINDDateTime.tilldateFormat,
+        "userId": userId,
+      },
+    );
+
+    return ItemwiseSaleReport.fetchList(data.resultData, fromServer: true);
   }
 
   Future<List<ReceiptInfo>> getSaleHistoryWithItems({
@@ -42,8 +60,8 @@ class RemoteSource {
       SoketEvents.getSaleHistoryWithItems,
       {
         "siteId": _login.siteId,
-        "fromDate": dateRange.start.fromdateFormat,
-        "tillDate": dateRange.end.tilldateFormat,
+        "fromDate": dateRange.start.toINDDateTime.fromdateFormat,
+        "tillDate": dateRange.end.toINDDateTime.tilldateFormat,
         "userId": userId,
       },
     );

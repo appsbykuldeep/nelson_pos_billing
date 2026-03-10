@@ -121,7 +121,7 @@ class _SitewiseHistoryScreenState extends State<SitewiseHistoryScreen> {
 
                       alignment: Alignment.center,
                     ),
-                    columnWidth: const FixedColumnWidth(150),
+                    columnWidth: const FixedColumnWidth(220),
                   ),
                   DataColumn(
                     label: DataCellWid(
@@ -169,7 +169,7 @@ class _SitewiseHistoryScreenState extends State<SitewiseHistoryScreen> {
 
                         DataCell(
                           DataCellWid(
-                            x.saleOn?.dateVibleDate ?? "-",
+                            x.saleOn?.dateVibleDateStamp ?? "-",
                             style: cellStyle,
                           ),
                         ),

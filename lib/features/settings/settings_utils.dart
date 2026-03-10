@@ -18,6 +18,7 @@ import 'package:pos_billing/core/extensions/string_ext.dart';
 import 'package:pos_billing/core/functions/system_chrome_fun.dart';
 import 'package:pos_billing/features/change_password/change_password_page.dart';
 import 'package:pos_billing/features/item_history/item_history_screen.dart';
+import 'package:pos_billing/features/itemsie_daily_sale/itemwise_daily_sale_screen.dart';
 import 'package:pos_billing/features/login/login_screen.dart';
 import 'package:pos_billing/features/share_app/share_app_screen.dart';
 import 'package:pos_billing/features/sitewise_history/sitewise_history_screen.dart';
@@ -71,10 +72,17 @@ class SettingsUtils implements StatefulUtil {
     );
   }
 
-  void onTapDailySaleReport() {
+  void onTapUserWiseDailySaleReport() {
     App.to(
       (_) => UserwiseDailySaleScreen(),
       routeName: UserwiseDailySaleScreen.routeName,
+    );
+  }
+
+  void onTapItemWiseDailySaleReport() {
+    App.to(
+      (_) => ItemWiseDailySaleScreen(),
+      routeName: ItemWiseDailySaleScreen.routeName,
     );
   }
 

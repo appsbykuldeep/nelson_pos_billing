@@ -18,7 +18,7 @@ class SocketHeartbeet implements InitializedClass, DisposeClass {
 
   void resetHeartBeet() {
     stop();
-    _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 60), (timer) {
       _beet();
     });
   }

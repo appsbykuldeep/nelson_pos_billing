@@ -37,11 +37,11 @@ class _ItemHistoryScreenState extends State<ItemHistoryScreen> {
     final textTheme = theme.textTheme;
     return Scaffold(
       appBar: AppBar(title: Text("Items")),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: util.onAddUpdateitem,
-        label: Text("Item"),
-        icon: Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: util.onAddUpdateitem,
+      //   label: Text("Item"),
+      //   icon: Icon(Icons.add),
+      // ),
       body: ValueListenableBuilder(
         valueListenable: util.showItems,
         builder: (context, showItems, child) {
@@ -65,11 +65,26 @@ class _ItemHistoryScreenState extends State<ItemHistoryScreen> {
                   spacing: 10,
                   children: [
                     Expanded(
-                      child: Text(data.itemName, style: textTheme.titleMedium),
+                      child: Text.rich(
+                        TextSpan(
+                          text: data.itemName,
+                          children: [
+                            if (data.itemNameInEnglish.isNotEmpty) ...[
+                              TextSpan(text: "\n"),
+                              TextSpan(
+                                text: data.itemNameInEnglish,
+
+                                style: textTheme.bodyMedium,
+                              ),
+                            ],
+                          ],
+                        ),
+                        style: textTheme.titleMedium,
+                      ),
                     ),
 
                     Text(
-                      data.itemRate.thousandText(),
+                      "Rs.${data.itemRate.thousandText()}",
                       style: textTheme.titleMedium,
                     ),
                   ],

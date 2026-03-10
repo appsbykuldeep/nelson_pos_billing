@@ -1,3 +1,4 @@
+import 'package:pos_billing/core/extensions/datetime_ext.dart';
 import 'package:pos_billing/core/extensions/parse_value_by_map.dart';
 
 class UserWiseSaleReport {
@@ -31,6 +32,15 @@ class UserWiseSaleReport {
 
     return [];
   }
+
+  Map<String, dynamic> toExcelData() => {
+    "Sale Date": saleDate.dateVibleDate,
+    "Full Name": userFullName,
+    "Total Sale Count": totalSaleCount,
+    "Online Sale Amount": onlineSaleAmount,
+    "Cash Sale Amount": cashSaleAmount,
+    "Total Sale Amount": totalSaleAmount,
+  };
 
   factory UserWiseSaleReport.fromJson(
     Map<String, dynamic> json, {

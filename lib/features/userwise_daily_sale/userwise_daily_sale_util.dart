@@ -26,6 +26,16 @@ class UserwiseDailySaleUtil implements StatefulUtil {
         );
   }
 
+  Future<void> onTapExcel() async {
+    List<UserWiseSaleReport> data = historyNotifier.value ?? [];
+    List<Map<String, dynamic>> excelData = [];
+    for (var x in data) {
+      excelData.add(x.toExcelData());
+    }
+
+    await createExcelFile(excelData, fileNamePrefix: "UserWiseSale");
+  }
+
   @override
   void onPageClose() {
     // TODO: implement onPageClose

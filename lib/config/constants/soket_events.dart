@@ -36,4 +36,5 @@ class SoketEvents {
   static const String saveAllReceipts = 'SaveAllReceipts';
   static const String getDailyUserWiseSaleReport = 'GetDailyUserWiseSaleReport';
   static const String getSaleHistoryWithItems = 'GetSaleHistoryWithItems';
+  static const String getDailyItemWiseSaleReport = 'GetDailyItemWiseSaleReport';
 }

@@ -1,11 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:pos_billing/common/classes/time_laps.dart';
 import 'package:pos_billing/common/models/basic/site_detail_model.dart';
 import 'package:pos_billing/common/models/sale/receipt_info.dart';
 import 'package:pos_billing/common/singletons/app.dart';
 import 'package:pos_billing/common/singletons/printer_ctrl.dart';
-import 'package:pos_billing/common/singletons/widget_to_image_converter.dart';
 import 'package:pos_billing/core/extensions/datetime_ext.dart';
 import 'package:pos_billing/core/extensions/num_ex.dart';
 import 'package:screenshot/screenshot.dart';
@@ -16,22 +16,20 @@ class ReceiptPrintableWid {
   const ReceiptPrintableWid({required this.stand, required this.receiptInfo});
 
   Future<Uint8List?> getPrintableBytes() async {
-    if (1 == 0) {
-      final conv = WidgetToImageConverter();
-
-      return await conv.getWidgetBytes(build(), highQuality: false);
-    }
+    TimeLaps t0 = TimeLaps(tag: "lap_widconv");
 
     final ScreenshotController screenshotController = ScreenshotController();
 
     Uint8List capturedImage = await screenshotController.captureFromWidget(
       InheritedTheme.captureAll(
         App.context,
-        Material(color: Colors.white, child: build()),
+        Material(color: Colors.white, child: receiptWidget()),
       ),
-      delay: const Duration(milliseconds: 10),
-      pixelRatio: 2,
+      delay: const Duration(milliseconds: 0),
+      context: App.context,
+      pixelRatio: 1,
     );
+    t0.laps("wid_img");
 
     return capturedImage;
   }
@@ -41,11 +39,14 @@ class ReceiptPrintableWid {
   double get largeFontSize => 28;
   double get extralargeFontSize => 40;
 
+  double get receiptWidth =>
+      BlueThurmalPrint.instance.selectedpaperSize.width.toDouble();
+
   TextStyle get siteNameStyle => TextStyle(
-    fontSize: largeFontSize,
+    fontSize: 25,
     color: Colors.black,
     fontWeight: FontWeight.bold,
-    letterSpacing: 1.1,
+    // letterSpacing: 1.1,
   );
   TextStyle get smallStyle => TextStyle(
     fontSize: 18,
@@ -59,11 +60,13 @@ class ReceiptPrintableWid {
     fontWeight: FontWeight.bold,
   );
 
-  Widget build() {
+  Divider get divider => Divider(thickness: 1.5);
+
+  Widget receiptWidget([Key? key]) {
     return Container(
       // width: 384, // Standard pixel width for 58mm printers. Use 576 for 80mm.
-      width: BlueThurmalPrint.instance.selectedpaperSize.width.toDouble(),
-      padding: const EdgeInsets.all(5),
+      width: receiptWidth,
+      padding: const EdgeInsets.symmetric(horizontal: 0),
 
       // decoration: BoxDecoration(border: Border.all(), color: Colors.white),
       child: Column(
@@ -76,33 +79,48 @@ class ReceiptPrintableWid {
             style: siteNameStyle,
             textAlign: TextAlign.center,
           ),
-          Text(
-            stand.siteAddressLine1,
-            style: siteNameStyle,
-            textAlign: TextAlign.center,
-          ),
-          Text(
-            stand.siteAddressLine2,
-            style: siteNameStyle,
-            textAlign: TextAlign.center,
-          ),
-          Divider(thickness: 1.5),
+          if (stand.siteAddressLine1.isNotEmpty)
+            Text(
+              stand.siteAddressLine1,
+              style: siteNameStyle,
+              textAlign: TextAlign.center,
+            ),
+          if (stand.siteAddressLine2.isNotEmpty)
+            Text(
+              stand.siteAddressLine2,
+              style: siteNameStyle,
+              textAlign: TextAlign.center,
+            ),
+          divider,
           Row(
             spacing: 3,
             children: [
-              Text("Bill: ${receiptInfo.showSaleNumber}", style: smallStyle),
+              Text.rich(
+                TextSpan(
+                  text: "Bill- ",
+                  children: [
+                    TextSpan(
+                      text: receiptInfo.showSaleNumber,
+
+                      style: mediumStyle,
+                    ),
+                  ],
+                ),
+                style: mediumStyle,
+              ),
               Expanded(
                 child: Align(
                   alignment: AlignmentGeometry.centerRight,
                   child: Text(
                     DateTime.now().custumDateFormat("dd-MM-yyy hh:mm:ss a"),
-                    style: smallStyle,
+                    style: mediumStyle,
+                    textAlign: TextAlign.right,
                   ),
                 ),
               ),
             ],
           ),
-          Divider(thickness: 1.5),
+          divider,
 
           Table(
             columnWidths: {
@@ -124,7 +142,7 @@ class ReceiptPrintableWid {
             ],
           ),
 
-          Divider(thickness: 1.5),
+          divider,
           Table(
             columnWidths: {
               0: FlexColumnWidth(3.5),
@@ -154,13 +172,44 @@ class ReceiptPrintableWid {
             ],
           ),
 
-          Divider(thickness: 1.5),
-          Text(
-            "Rs.${receiptInfo.totalAmount.thousandText()}",
-
-            style: siteNameStyle.copyWith(fontSize: 30),
+          divider,
+          Table(
+            columnWidths: {
+              0: FlexColumnWidth(3.5),
+              1: FlexColumnWidth(1.5),
+              2: FlexColumnWidth(2),
+            },
+            children: [
+              TableRow(
+                children: [
+                  Text(
+                    "Total",
+                    style: mediumStyle.copyWith(fontSize: largeFontSize),
+                  ),
+                  Center(
+                    child: Text(
+                      receiptInfo.totalItems.thousandText(),
+                      style: mediumStyle.copyWith(fontSize: largeFontSize),
+                    ),
+                  ),
+                  Align(
+                    alignment: AlignmentGeometry.centerRight,
+                    child: Text(
+                      receiptInfo.totalAmount.thousandText(),
+                      style: mediumStyle.copyWith(fontSize: largeFontSize),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          Divider(thickness: 1.5),
+
+          // Text(
+          //   "Rs.${receiptInfo.totalAmount.thousandText()}",
+
+          //   style: siteNameStyle.copyWith(fontSize: 30),
+          // ),
+          divider,
 
           // Text("Thank You! Visit Again", style: mediumStyle),
         ],

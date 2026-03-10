@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pos_billing/common/abstract_classes/stateful_util.dart';
 import 'package:pos_billing/common/data_source/remote_source/remote_source.dart';
-import 'package:pos_billing/common/models/sale_reports/user_wise_sale_report.dart';
+import 'package:pos_billing/common/models/sale_reports/itemwise_sale_report.dart';
 import 'package:pos_billing/common/singletons/login_ctrl.dart';
 import 'package:pos_billing/common/widgets/app_title_wid.dart';
 import 'package:pos_billing/common/widgets/data_cell.dart';
@@ -9,24 +9,24 @@ import 'package:pos_billing/core/extensions/datetime_ext.dart';
 import 'package:pos_billing/core/extensions/num_ex.dart';
 import 'package:pos_billing/core/functions/create_excel_file.dart';
 
-part 'userwise_daily_sale_util.dart';
+part 'itemwise_daily_sale_util.dart';
 
-class UserwiseDailySaleScreen extends StatefulWidget {
-  const UserwiseDailySaleScreen({super.key});
+class ItemWiseDailySaleScreen extends StatefulWidget {
+  const ItemWiseDailySaleScreen({super.key});
 
-  static const String routeName = "/UserwiseDailySaleScreen";
+  static const String routeName = "/ItemWiseDailySaleScreen";
 
   @override
-  State<UserwiseDailySaleScreen> createState() =>
-      _UserwiseDailySaleScreenState();
+  State<ItemWiseDailySaleScreen> createState() =>
+      _ItemWiseDailySaleScreenState();
 }
 
-class _UserwiseDailySaleScreenState extends State<UserwiseDailySaleScreen> {
-  late UserwiseDailySaleUtil util;
+class _ItemWiseDailySaleScreenState extends State<ItemWiseDailySaleScreen> {
+  late ItemWiseDailySaleUtil util;
 
   @override
   void initState() {
-    util = UserwiseDailySaleUtil()..onPageInit();
+    util = ItemWiseDailySaleUtil()..onPageInit();
     super.initState();
   }
 
@@ -87,16 +87,15 @@ class _UserwiseDailySaleScreenState extends State<UserwiseDailySaleScreen> {
             );
           }
 
-          final (totalCount, cash, online, totalAmt) = history
-              .fold<(int, double, double, double)>(
-                (0, 0, 0, 0),
-                (p, c) => (
-                  p.$1 + c.totalSaleCount,
-                  p.$2 + c.cashSaleAmount,
-                  p.$2 + c.onlineSaleAmount,
-                  p.$2 + c.totalSaleAmount,
-                ),
-              );
+          final (
+            onlineItemCount,
+            onlineItemAmount,
+            cashItemCount,
+            cashItemAmount,
+            totalItemCount,
+            totalItemAmount,
+          ) = util
+              .getGrandTotal();
 
           return SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(5, 10, 5, 60),
@@ -134,11 +133,19 @@ class _UserwiseDailySaleScreenState extends State<UserwiseDailySaleScreen> {
                       style: headStyle,
                       alignment: Alignment.center,
                     ),
-                    columnWidth: const FixedColumnWidth(150),
+                    columnWidth: const FixedColumnWidth(200),
                   ),
                   DataColumn(
                     label: DataCellWid(
-                      "Quantity",
+                      "Name (In English)",
+                      style: headStyle,
+                      alignment: Alignment.center,
+                    ),
+                    columnWidth: const FixedColumnWidth(200),
+                  ),
+                  DataColumn(
+                    label: DataCellWid(
+                      "Online Qty",
                       style: headStyle,
                       alignment: Alignment.center,
                     ),
@@ -146,7 +153,7 @@ class _UserwiseDailySaleScreenState extends State<UserwiseDailySaleScreen> {
                   ),
                   DataColumn(
                     label: DataCellWid(
-                      "Cash",
+                      "Online Amt",
                       style: headStyle,
                       alignment: Alignment.center,
                     ),
@@ -154,7 +161,7 @@ class _UserwiseDailySaleScreenState extends State<UserwiseDailySaleScreen> {
                   ),
                   DataColumn(
                     label: DataCellWid(
-                      "Online",
+                      "Cash Qty",
                       style: headStyle,
                       alignment: Alignment.center,
                     ),
@@ -162,7 +169,23 @@ class _UserwiseDailySaleScreenState extends State<UserwiseDailySaleScreen> {
                   ),
                   DataColumn(
                     label: DataCellWid(
-                      "Amount",
+                      "Cash Amt",
+                      style: headStyle,
+                      alignment: Alignment.center,
+                    ),
+                    columnWidth: const FixedColumnWidth(120),
+                  ),
+                  DataColumn(
+                    label: DataCellWid(
+                      "Total Qty",
+                      style: headStyle,
+                      alignment: Alignment.center,
+                    ),
+                    columnWidth: const FixedColumnWidth(120),
+                  ),
+                  DataColumn(
+                    label: DataCellWid(
+                      "Total Amt",
                       style: headStyle,
                       alignment: Alignment.center,
                     ),
@@ -186,31 +209,48 @@ class _UserwiseDailySaleScreenState extends State<UserwiseDailySaleScreen> {
                             style: cellStyle,
                           ),
                         ),
-                        DataCell(DataCellWid(x.userFullName, style: cellStyle)),
+                        DataCell(DataCellWid(x.itemName, style: cellStyle)),
+                        DataCell(
+                          DataCellWid(x.itemNameInEnglish, style: cellStyle),
+                        ),
                         DataCell(
                           DataCellWid(
-                            x.totalSaleCount.thousandText(),
+                            x.onlineItemCount.thousandText(),
                             style: cellStyle,
                             alignment: Alignment.centerRight,
                           ),
                         ),
                         DataCell(
                           DataCellWid(
-                            x.cashSaleAmount.thousandText(),
+                            x.onlineItemAmount.thousandText(),
                             style: cellStyle,
                             alignment: Alignment.centerRight,
                           ),
                         ),
                         DataCell(
                           DataCellWid(
-                            x.onlineSaleAmount.thousandText(),
+                            x.cashItemCount.thousandText(),
                             style: cellStyle,
                             alignment: Alignment.centerRight,
                           ),
                         ),
                         DataCell(
                           DataCellWid(
-                            x.totalSaleAmount.thousandText(),
+                            x.cashItemAmount.thousandText(),
+                            style: cellStyle,
+                            alignment: Alignment.centerRight,
+                          ),
+                        ),
+                        DataCell(
+                          DataCellWid(
+                            x.totalItemCount.thousandText(),
+                            style: cellStyle,
+                            alignment: Alignment.centerRight,
+                          ),
+                        ),
+                        DataCell(
+                          DataCellWid(
+                            x.totalItemAmount.thousandText(),
                             style: cellStyle,
                             alignment: Alignment.centerRight,
                           ),
@@ -222,32 +262,46 @@ class _UserwiseDailySaleScreenState extends State<UserwiseDailySaleScreen> {
                     DataRow(
                       color: fixedheadingRowColor,
                       cells: [
-                        ...List.generate(3, (index) => DataCell(SizedBox())),
+                        ...List.generate(4, (index) => DataCell(SizedBox())),
 
                         DataCell(
                           DataCellWid(
-                            totalCount.thousandText(),
+                            onlineItemCount.thousandText(),
                             style: headStyle,
                             alignment: Alignment.centerRight,
                           ),
                         ),
                         DataCell(
                           DataCellWid(
-                            cash.thousandText(),
+                            onlineItemAmount.thousandText(),
                             style: headStyle,
                             alignment: Alignment.centerRight,
                           ),
                         ),
                         DataCell(
                           DataCellWid(
-                            online.thousandText(),
+                            cashItemCount.thousandText(),
                             style: headStyle,
                             alignment: Alignment.centerRight,
                           ),
                         ),
                         DataCell(
                           DataCellWid(
-                            totalAmt.thousandText(),
+                            cashItemAmount.thousandText(),
+                            style: headStyle,
+                            alignment: Alignment.centerRight,
+                          ),
+                        ),
+                        DataCell(
+                          DataCellWid(
+                            totalItemCount.thousandText(),
+                            style: headStyle,
+                            alignment: Alignment.centerRight,
+                          ),
+                        ),
+                        DataCell(
+                          DataCellWid(
+                            totalItemAmount.thousandText(),
                             style: headStyle,
                             alignment: Alignment.centerRight,
                           ),

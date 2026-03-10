@@ -100,6 +100,10 @@ class CreateReceiptUtil implements StatefulUtil {
         .toList();
     final (qty, amt) = getGrandTotal();
     final user = login.userNotifier.value;
+    if (items.isEmpty) {
+      "Please add some items".showToast;
+      return;
+    }
 
     final receiptInfo = ReceiptInfo(
       saleUID: _saleUID,
@@ -112,6 +116,7 @@ class CreateReceiptUtil implements StatefulUtil {
       siteId: user.siteId,
       paymentMode: paymentModeNotifier.value,
     );
+
     LoadingDialogue.show();
     final (saveStatus, saveMessage) = await saveAllReceipts(receiptInfo);
     LoadingDialogue.hide();

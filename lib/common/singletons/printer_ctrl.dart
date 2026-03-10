@@ -21,6 +21,7 @@ import 'package:pos_billing/config/enums/paper_size.dart';
 import 'package:pos_billing/core/extensions/localdb_ext.dart';
 import 'package:pos_billing/core/extensions/string_ext.dart';
 import 'package:pos_billing/core/functions/printable_tickets/general_counter_token/get_instant_bytes.dart';
+import 'package:pos_billing/core/functions/printable_tickets/get_printable_ticket_image.dart';
 import 'package:pos_billing/core/functions/printable_tickets/test_print/test_print_bytes_v1.dart';
 
 class BlueThurmalPrint extends StatefulUtil {
@@ -167,6 +168,18 @@ class BlueThurmalPrint extends StatefulUtil {
   Future<Generator> getTicketGenerator() async {
     _profile ??= await CapabilityProfile.load();
     return Generator(selectedpaperSize, _profile!, spaceBetweenRows: 0);
+  }
+
+  Future<PrintStatus> printReceiptViaPreview({
+    required Uint8List receiptInfo,
+  }) async {
+    final bytes = await getPrintableTicketImageByImage(
+      ticket: await getTicketGenerator(),
+      imageBase64: receiptInfo,
+    );
+    final status = await printBytesData(data: bytes);
+
+    return status;
   }
 
   Future<PrintStatus> printgeneralCounterToken({

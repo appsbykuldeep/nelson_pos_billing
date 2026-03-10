@@ -237,9 +237,14 @@ class StandSettingsBody extends StatelessWidget {
                   lable: "Reports",
                   children: [
                     OptionTile(
-                      title: "Daily Sale",
+                      title: "User Wise Daily Sale",
                       iconData: Icons.currency_rupee,
-                      onTap: util.onTapDailySaleReport,
+                      onTap: util.onTapUserWiseDailySaleReport,
+                    ),
+                    OptionTile(
+                      title: "Item Wise Daily Sale",
+                      iconData: Icons.currency_rupee,
+                      onTap: util.onTapItemWiseDailySaleReport,
                     ),
                     OptionTile(
                       title: "Sale History",
