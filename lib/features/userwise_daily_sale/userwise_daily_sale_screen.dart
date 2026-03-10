@@ -93,8 +93,8 @@ class _UserwiseDailySaleScreenState extends State<UserwiseDailySaleScreen> {
                 (p, c) => (
                   p.$1 + c.totalSaleCount,
                   p.$2 + c.cashSaleAmount,
-                  p.$2 + c.onlineSaleAmount,
-                  p.$2 + c.totalSaleAmount,
+                  p.$3 + c.onlineSaleAmount,
+                  p.$4 + c.totalSaleAmount,
                 ),
               );
 
