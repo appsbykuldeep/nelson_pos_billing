@@ -27,6 +27,7 @@ class SoketEvents {
   static const String getLastCounterToken = 'GetLastCounterToken';
   static const String logoutUser = 'LogoutUser';
   static const String changePassword = 'ChangePassword';
+  static const String resetUserPassword = 'ResetUserPassword';
   static const String getSiteWiseTokenHistory = 'GetSiteWiseTokenHistory';
   static const String getUserWiseTokenHistory = 'GetUserWiseTokenHistory';
   static const String syncLocalDBV5 = 'SyncLocalDBV5';
@@ -37,4 +38,8 @@ class SoketEvents {
   static const String getDailyUserWiseSaleReport = 'GetDailyUserWiseSaleReport';
   static const String getSaleHistoryWithItems = 'GetSaleHistoryWithItems';
   static const String getDailyItemWiseSaleReport = 'GetDailyItemWiseSaleReport';
+  static const String updateOnlineStandUsers = 'UpdateOnlineStandUsers';
+  static const String addEditWorkStaff = 'AddEditWorkStaff';
+  static const String emitEventToSiteUsers = 'EmitEventToSiteUsers';
+  static const String deleteStandWorkStaff = 'DeleteStandWorkStaff';
 }

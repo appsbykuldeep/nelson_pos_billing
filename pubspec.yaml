@@ -88,6 +88,7 @@ dependencies:
   image: ^3.3.0
   screenshot: ^3.0.0
   excel: ^4.0.6
+  grouped_list: ^6.0.0
 
 
 dev_dependencies:

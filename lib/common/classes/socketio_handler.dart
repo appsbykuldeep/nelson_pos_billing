@@ -271,6 +271,21 @@ class SocketIoHandler implements InitializedClass, DisposeClass {
     _socket.emit(event, data);
   }
 
+  void emitEventToSiteUsers({
+    required String event,
+    required List<int> userIds,
+    dynamic data,
+  }) {
+    if (userIds.isEmpty || event.isEmpty) {
+      return;
+    }
+    emitEvent(SoketEvents.emitEventToSiteUsers, {
+      "event": event,
+      "data": data,
+      "userIds": userIds,
+    });
+  }
+
   Future<bool> connectAndWatForMasterData() async {
     if (isConnected) return true;
     try {

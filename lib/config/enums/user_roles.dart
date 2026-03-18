@@ -30,6 +30,13 @@ enum UserRole {
 
   bool get isOwnerOrAdmin => [owner, admin].contains(this);
 
+  static List<UserRole> workStaffRolesByCurrentUserRole(UserRole role) {
+    if (role.isOwner) {
+      return [admin, staff];
+    }
+    return [];
+  }
+
   factory UserRole.byValue(dynamic value) => switch (value) {
     // name
     "Owner" => UserRole.owner,
