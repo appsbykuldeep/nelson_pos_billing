@@ -5,6 +5,7 @@ import 'package:pos_billing/common/models/sale_reports/user_wise_sale_report.dar
 import 'package:pos_billing/common/singletons/login_ctrl.dart';
 import 'package:pos_billing/common/widgets/app_title_wid.dart';
 import 'package:pos_billing/common/widgets/data_cell.dart';
+import 'package:pos_billing/common/widgets/predefine_daterange_button.dart';
 import 'package:pos_billing/core/extensions/datetime_ext.dart';
 import 'package:pos_billing/core/extensions/num_ex.dart';
 import 'package:pos_billing/core/functions/create_excel_file.dart';
@@ -71,194 +72,214 @@ class _UserwiseDailySaleScreenState extends State<UserwiseDailySaleScreen> {
         ],
       ),
 
-      body: ValueListenableBuilder(
-        valueListenable: util.historyNotifier,
-        builder: (context, history, child) {
-          if (history == null) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (history.isEmpty) {
-            return Center(
-              child: Text(
-                "No record found !",
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: PredefineDaterangeButton(
+              onTapAny: util.onTapDateRangeChange,
+            ),
+          ),
+          ValueListenableBuilder(
+            valueListenable: util.historyNotifier,
+            builder: (context, history, child) {
+              if (history == null) {
+                return SliverToBoxAdapter(
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              if (history.isEmpty) {
+                return SliverToBoxAdapter(
+                  child: Center(
+                    child: Text(
+                      "No record found !",
 
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-            );
-          }
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                );
+              }
 
-          final (totalCount, cash, online, totalAmt) = history
-              .fold<(int, double, double, double)>(
-                (0, 0, 0, 0),
-                (p, c) => (
-                  p.$1 + c.totalSaleCount,
-                  p.$2 + c.cashSaleAmount,
-                  p.$3 + c.onlineSaleAmount,
-                  p.$4 + c.totalSaleAmount,
+              final (totalCount, cash, online, totalAmt) = history
+                  .fold<(int, double, double, double)>(
+                    (0, 0, 0, 0),
+                    (p, c) => (
+                      p.$1 + c.totalSaleCount,
+                      p.$2 + c.cashSaleAmount,
+                      p.$3 + c.onlineSaleAmount,
+                      p.$4 + c.totalSaleAmount,
+                    ),
+                  );
+
+              return SliverToBoxAdapter(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    dividerThickness: 2,
+                    columnSpacing: 0,
+                    border: TableBorder.all(width: 1.0, color: Colors.grey),
+                    headingRowColor: fixedheadingRowColor,
+
+                    columns: [
+                      DataColumn(
+                        label: DataCellWid(
+                          "S.No",
+                          style: headStyle,
+
+                          alignment: Alignment.center,
+                        ),
+                        columnWidth: const FixedColumnWidth(80),
+                      ),
+
+                      DataColumn(
+                        label: DataCellWid(
+                          "Date",
+                          style: headStyle,
+
+                          alignment: Alignment.center,
+                        ),
+                        columnWidth: const FixedColumnWidth(150),
+                      ),
+                      DataColumn(
+                        label: DataCellWid(
+                          "Name",
+                          style: headStyle,
+                          alignment: Alignment.center,
+                        ),
+                        columnWidth: const FixedColumnWidth(150),
+                      ),
+                      DataColumn(
+                        label: DataCellWid(
+                          "Quantity",
+                          style: headStyle,
+                          alignment: Alignment.center,
+                        ),
+                        columnWidth: const FixedColumnWidth(120),
+                      ),
+                      DataColumn(
+                        label: DataCellWid(
+                          "Cash",
+                          style: headStyle,
+                          alignment: Alignment.center,
+                        ),
+                        columnWidth: const FixedColumnWidth(120),
+                      ),
+                      DataColumn(
+                        label: DataCellWid(
+                          "Online",
+                          style: headStyle,
+                          alignment: Alignment.center,
+                        ),
+                        columnWidth: const FixedColumnWidth(120),
+                      ),
+                      DataColumn(
+                        label: DataCellWid(
+                          "Amount",
+                          style: headStyle,
+                          alignment: Alignment.center,
+                        ),
+                        columnWidth: const FixedColumnWidth(120),
+                      ),
+                    ],
+                    rows: [
+                      for (var (i, x) in history.indexed)
+                        DataRow(
+                          color: i.isEven
+                              ? WidgetStateProperty.resolveWith(
+                                  (states) => Colors.grey.shade200,
+                                )
+                              : null,
+                          cells: [
+                            DataCell(DataCellWid("${i + 1}", style: cellStyle)),
+
+                            DataCell(
+                              DataCellWid(
+                                x.saleDate.dateVibleDate,
+                                style: cellStyle,
+                              ),
+                            ),
+                            DataCell(
+                              DataCellWid(x.userFullName, style: cellStyle),
+                            ),
+                            DataCell(
+                              DataCellWid(
+                                x.totalSaleCount.thousandText(),
+                                style: cellStyle,
+                                alignment: Alignment.centerRight,
+                              ),
+                            ),
+                            DataCell(
+                              DataCellWid(
+                                x.cashSaleAmount.thousandText(),
+                                style: cellStyle,
+                                alignment: Alignment.centerRight,
+                              ),
+                            ),
+                            DataCell(
+                              DataCellWid(
+                                x.onlineSaleAmount.thousandText(),
+                                style: cellStyle,
+                                alignment: Alignment.centerRight,
+                              ),
+                            ),
+                            DataCell(
+                              DataCellWid(
+                                x.totalSaleAmount.thousandText(),
+                                style: cellStyle,
+                                alignment: Alignment.centerRight,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                      if (history.isNotEmpty)
+                        DataRow(
+                          color: fixedheadingRowColor,
+                          cells: [
+                            ...List.generate(
+                              3,
+                              (index) => DataCell(SizedBox()),
+                            ),
+
+                            DataCell(
+                              DataCellWid(
+                                totalCount.thousandText(),
+                                style: headStyle,
+                                alignment: Alignment.centerRight,
+                              ),
+                            ),
+                            DataCell(
+                              DataCellWid(
+                                cash.thousandText(),
+                                style: headStyle,
+                                alignment: Alignment.centerRight,
+                              ),
+                            ),
+                            DataCell(
+                              DataCellWid(
+                                online.thousandText(),
+                                style: headStyle,
+                                alignment: Alignment.centerRight,
+                              ),
+                            ),
+                            DataCell(
+                              DataCellWid(
+                                totalAmt.thousandText(),
+                                style: headStyle,
+                                alignment: Alignment.centerRight,
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
                 ),
               );
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(5, 10, 5, 60),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                dividerThickness: 2,
-                columnSpacing: 0,
-                border: TableBorder.all(width: 1.0, color: Colors.grey),
-                headingRowColor: fixedheadingRowColor,
-
-                columns: [
-                  DataColumn(
-                    label: DataCellWid(
-                      "S.No",
-                      style: headStyle,
-
-                      alignment: Alignment.center,
-                    ),
-                    columnWidth: const FixedColumnWidth(80),
-                  ),
-
-                  DataColumn(
-                    label: DataCellWid(
-                      "Date",
-                      style: headStyle,
-
-                      alignment: Alignment.center,
-                    ),
-                    columnWidth: const FixedColumnWidth(150),
-                  ),
-                  DataColumn(
-                    label: DataCellWid(
-                      "Name",
-                      style: headStyle,
-                      alignment: Alignment.center,
-                    ),
-                    columnWidth: const FixedColumnWidth(150),
-                  ),
-                  DataColumn(
-                    label: DataCellWid(
-                      "Quantity",
-                      style: headStyle,
-                      alignment: Alignment.center,
-                    ),
-                    columnWidth: const FixedColumnWidth(120),
-                  ),
-                  DataColumn(
-                    label: DataCellWid(
-                      "Cash",
-                      style: headStyle,
-                      alignment: Alignment.center,
-                    ),
-                    columnWidth: const FixedColumnWidth(120),
-                  ),
-                  DataColumn(
-                    label: DataCellWid(
-                      "Online",
-                      style: headStyle,
-                      alignment: Alignment.center,
-                    ),
-                    columnWidth: const FixedColumnWidth(120),
-                  ),
-                  DataColumn(
-                    label: DataCellWid(
-                      "Amount",
-                      style: headStyle,
-                      alignment: Alignment.center,
-                    ),
-                    columnWidth: const FixedColumnWidth(120),
-                  ),
-                ],
-                rows: [
-                  for (var (i, x) in history.indexed)
-                    DataRow(
-                      color: i.isEven
-                          ? WidgetStateProperty.resolveWith(
-                              (states) => Colors.grey.shade200,
-                            )
-                          : null,
-                      cells: [
-                        DataCell(DataCellWid("${i + 1}", style: cellStyle)),
-
-                        DataCell(
-                          DataCellWid(
-                            x.saleDate.dateVibleDate,
-                            style: cellStyle,
-                          ),
-                        ),
-                        DataCell(DataCellWid(x.userFullName, style: cellStyle)),
-                        DataCell(
-                          DataCellWid(
-                            x.totalSaleCount.thousandText(),
-                            style: cellStyle,
-                            alignment: Alignment.centerRight,
-                          ),
-                        ),
-                        DataCell(
-                          DataCellWid(
-                            x.cashSaleAmount.thousandText(),
-                            style: cellStyle,
-                            alignment: Alignment.centerRight,
-                          ),
-                        ),
-                        DataCell(
-                          DataCellWid(
-                            x.onlineSaleAmount.thousandText(),
-                            style: cellStyle,
-                            alignment: Alignment.centerRight,
-                          ),
-                        ),
-                        DataCell(
-                          DataCellWid(
-                            x.totalSaleAmount.thousandText(),
-                            style: cellStyle,
-                            alignment: Alignment.centerRight,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                  if (history.isNotEmpty)
-                    DataRow(
-                      color: fixedheadingRowColor,
-                      cells: [
-                        ...List.generate(3, (index) => DataCell(SizedBox())),
-
-                        DataCell(
-                          DataCellWid(
-                            totalCount.thousandText(),
-                            style: headStyle,
-                            alignment: Alignment.centerRight,
-                          ),
-                        ),
-                        DataCell(
-                          DataCellWid(
-                            cash.thousandText(),
-                            style: headStyle,
-                            alignment: Alignment.centerRight,
-                          ),
-                        ),
-                        DataCell(
-                          DataCellWid(
-                            online.thousandText(),
-                            style: headStyle,
-                            alignment: Alignment.centerRight,
-                          ),
-                        ),
-                        DataCell(
-                          DataCellWid(
-                            totalAmt.thousandText(),
-                            style: headStyle,
-                            alignment: Alignment.centerRight,
-                          ),
-                        ),
-                      ],
-                    ),
-                ],
-              ),
-            ),
-          );
-        },
+            },
+          ),
+        ],
       ),
     );
   }

@@ -78,6 +78,12 @@ class RemoteSource {
     return ItemInfo.fetchList(data.resultData, fromServer: true);
   }
 
+  Future<List<ItemInfo>> getActiveItems() async {
+    return (await getItemMasters())
+        .where((e) => e.currentStatus.isActive)
+        .toList();
+  }
+
   Future<(bool status, String message)> saveAllReceipts(
     List<ReceiptInfo> receiptInfos,
   ) async {
@@ -90,6 +96,17 @@ class RemoteSource {
         ReceiptNoCache.parseBySyncData(resp.resultData['saveResponses']);
       }
     }
+
+    return (resp.resultStatus, resp.resultMessage);
+  }
+
+  Future<(bool status, String message)> deleteItem({
+    required int itemId,
+  }) async {
+    final resp = await SocketIoHandler.emitWithResponseForCurrentUser(
+      SoketEvents.deleteItem,
+      {"itemId": itemId, "siteId": _login.siteId, "userId": _login.userId},
+    );
 
     return (resp.resultStatus, resp.resultMessage);
   }

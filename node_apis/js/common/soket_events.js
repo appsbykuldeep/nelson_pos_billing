@@ -15,6 +15,8 @@ const appEvents = {
     getDailyUserWiseSaleReport: "GetDailyUserWiseSaleReport",
     getDailyItemWiseSaleReport: "GetDailyItemWiseSaleReport",
     getSaleHistoryWithItems: "GetSaleHistoryWithItems",
+    addUpdateItems: "AddUpdateItems",
+    deleteItem: "DeleteItem",
 
 };
 

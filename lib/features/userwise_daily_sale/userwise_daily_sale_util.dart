@@ -51,5 +51,5 @@ class UserwiseDailySaleUtil implements StatefulUtil {
 
 DateTimeRange _initialRange() {
   final now = DateTime.now();
-  return DateTimeRange(start: now.subtract(const Duration(days: 7)), end: now);
+  return DateTimeRange(start: now.subtract(const Duration(days: 0)), end: now);
 }

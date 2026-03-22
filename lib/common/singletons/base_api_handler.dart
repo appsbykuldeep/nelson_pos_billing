@@ -7,6 +7,6 @@ class BaseApiHandler {
 
   static BaseApiHandler get instance => _instance;
 
-  static ApiConfig apiConfig = ApiConfig.forCounterTokenLive();
-  // static ApiConfig apiConfig = ApiConfig.forCounterTokenLocal();
+  // static ApiConfig apiConfig = ApiConfig.forCounterTokenLive();
+  static ApiConfig apiConfig = ApiConfig.forCounterTokenLocal();
 }

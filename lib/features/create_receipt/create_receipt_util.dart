@@ -89,7 +89,10 @@ class CreateReceiptUtil implements StatefulUtil {
     ReceiptInfo receiptInfo,
   ) async {
     if (socket.isConnected) {
-      return await RemoteSource.instnace.saveAllReceipts([receiptInfo]);
+      final (s, m) = await RemoteSource.instnace.saveAllReceipts([receiptInfo]);
+      if (s) {
+        return (s, m);
+      }
     }
     return SalereceiptInfoCacheData.instance.saveInLocal(receiptInfo);
   }
@@ -137,7 +140,7 @@ class CreateReceiptUtil implements StatefulUtil {
   }
 
   Future<void> getAllItems() async {
-    allItems = await RemoteSource.instnace.getItemMasters();
+    allItems = await RemoteSource.instnace.getActiveItems();
   }
 
   @override

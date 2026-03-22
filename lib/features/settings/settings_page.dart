@@ -223,16 +223,17 @@ class StandSettingsBody extends StatelessWidget {
                     ),
                   ],
                 ),
-                OptionCategory(
-                  lable: "History",
-                  children: [
-                    OptionTile(
-                      title: "Items",
-                      iconData: Icons.category,
-                      onTap: util.onTapItemHistory,
-                    ),
-                  ],
-                ),
+                if (util.userRole.isOwnerOrAdmin)
+                  OptionCategory(
+                    lable: "History",
+                    children: [
+                      OptionTile(
+                        title: "Items",
+                        iconData: Icons.category,
+                        onTap: util.onTapItemHistory,
+                      ),
+                    ],
+                  ),
                 OptionCategory(
                   lable: "Reports",
                   children: [

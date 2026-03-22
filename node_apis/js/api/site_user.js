@@ -99,12 +99,38 @@ async function changeUsersPassword(data) {
 }
 
 
+async function addUpdateItems(data) {
+    let paramKeys = ['itemId','itemName','itemNameInEnglish','itemRate','siteId','userId'];
+    let query = db.createProducreQuery('addUpdatemItems',paramKeys,data);
+
+     return db.runMySQLQueryAndParseResultByFirstArray(query)   ;
+    
+}
+
+
+async function deleteItem(data) {
+    let paramKeys = ['itemId','siteId','userId'];
+    let query = db.createProducreQuery('deletemItem',paramKeys,data);
+
+     return db.runMySQLQueryAndParseResultByFirstArray(query)   ;
+    
+}
+
 
 
 function registerEvensInSocket(socket) {
 
     socket.on(appEvents.changePassword, async (data, callback) => {
         callback(await changeUsersPassword(data));
+    });
+
+
+    socket.on(appEvents.addUpdateItems, async (data, callback) => {
+        callback(await addUpdateItems(data));
+    });
+
+    socket.on(appEvents.deleteItem, async (data, callback) => {
+        callback(await deleteItem(data));
     });
 
 

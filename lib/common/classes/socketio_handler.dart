@@ -115,7 +115,7 @@ class SocketIoHandler implements InitializedClass, DisposeClass {
       "deviceLocalTime": t0.dateTimeStanderedFormat,
       "deviceTimeZone": "${t0.timeZoneName}(${t0.timeZoneOffset.inMinutes})",
       "deviceINDTime": t0.toINDDateTime.dateTimeStanderedFormat,
-      "isMasterUser": login.isMasteruser,
+      "isMasterUser": kDebugMode ? 1 : login.isMasteruser,
     };
   }
 

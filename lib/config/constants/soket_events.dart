@@ -42,4 +42,6 @@ class SoketEvents {
   static const String addEditWorkStaff = 'AddEditWorkStaff';
   static const String emitEventToSiteUsers = 'EmitEventToSiteUsers';
   static const String deleteStandWorkStaff = 'DeleteStandWorkStaff';
+  static const String addUpdateItems = 'AddUpdateItems';
+  static const String deleteItem = 'DeleteItem';
 }

@@ -39,10 +39,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _setCredentials() {
     if (!kDebugMode) return;
-    // useridCtrl.text = "9698179994";
-    useridCtrl.text = "9616205455";
-    userpwCtrl.text = "12345";
-    // userpwCtrl.text = "Ge@856406";
+    useridCtrl.text = "9698179994";
+    // useridCtrl.text = "9616205455";
+    // userpwCtrl.text = "12345";
+    userpwCtrl.text = "Ge@856406";
   }
 
   void onLongPressLogin() async {
