@@ -82,7 +82,7 @@ async function saveAllReceipts(param) {
         }
     }
 
-    print("saveCount", saveCount, totalRecords, totalRecords === saveCount);
+    // print("saveCount", saveCount, totalRecords, totalRecords === saveCount);
 
 
     return db.setResult(
