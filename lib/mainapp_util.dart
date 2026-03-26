@@ -55,5 +55,6 @@ class MainAppUtil extends StatefulUtil {
     WakelockPlus.enable();
 
     VibrateHandler.instance.initialized();
+    SalereceiptInfoCacheData.instance.syncLocalData();
   }
 }

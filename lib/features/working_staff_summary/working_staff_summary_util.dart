@@ -21,6 +21,7 @@ class WorkingStaffSummaryUtil extends StatefulUtil {
     if (!isAutoRefresh) {
       showWorkStaffNotifier.value = null;
     }
+
     // showWorkStaffNotifier.value = (await DataProvider.instance
     //     .getWorkingStaffInfoList(
     //       onlineUsersCodes: onlineUsersCodes,

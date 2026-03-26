@@ -17,6 +17,10 @@ const appEvents = {
     getSaleHistoryWithItems: "GetSaleHistoryWithItems",
     addUpdateItems: "AddUpdateItems",
     deleteItem: "DeleteItem",
+    getWorkingStaffs: "GetWorkingStaffs",
+    resetUserPassword: "ResetUserPassword",
+    removeSiteUser: "RemoveSiteUser",
+    addUpdateSiteUser: "AddUpdateSiteUser",
 
 };
 

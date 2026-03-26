@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:pos_billing/common/data_source/remote_source/remote_source.dart';
 import 'package:pos_billing/common/models/sale/receipt_info.dart';
+import 'package:pos_billing/config/enums/localdb_sync_status.dart';
 import 'package:pos_billing/core/extensions/localdb_ext.dart';
 
 class SalereceiptInfoCacheData {
@@ -13,10 +15,24 @@ class SalereceiptInfoCacheData {
   static SalereceiptInfoCacheData get instance => _instance;
 
   List<ReceiptInfo> _unSyncedData = [];
+  ValueNotifier<LocalDataSyncState> isDBUpdatedNotifier = ValueNotifier(
+    LocalDataSyncState.updated,
+  );
+
+  void _updateNotifier([LocalDataSyncState? status]) {
+    if (status != null) {
+      isDBUpdatedNotifier.value = status;
+    } else {
+      isDBUpdatedNotifier.value = _unSyncedData.isEmpty
+          ? LocalDataSyncState.updated
+          : LocalDataSyncState.pending;
+    }
+  }
 
   Future<(bool, String)> saveInLocal(ReceiptInfo val) async {
     _unSyncedData.add(val);
     _saveUnsync();
+    _updateNotifier();
     return (true, "Record saved locally !");
   }
 
@@ -35,8 +51,10 @@ class SalereceiptInfoCacheData {
         jsonDecode(encoded),
         fromServer: false,
       );
+      _updateNotifier();
       return _unSyncedData;
     } catch (e) {
+      _updateNotifier();
       return [];
     }
   }
@@ -50,6 +68,8 @@ class SalereceiptInfoCacheData {
     _isSyncing = true;
     final local = [..._unSyncedData];
 
+    _updateNotifier(LocalDataSyncState.uploading);
+
     final (status, _) = await RemoteSource.instnace.saveAllReceipts(local);
     if (status) {
       for (var e in local) {
@@ -57,6 +77,7 @@ class SalereceiptInfoCacheData {
       }
     }
     _saveUnsync();
+    _updateNotifier();
     _isSyncing = false;
   }
 }

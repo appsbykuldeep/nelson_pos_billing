@@ -60,6 +60,12 @@ class ReceiptPrintableWid {
     fontWeight: FontWeight.bold,
   );
 
+  TextStyle get itemTextStyle => TextStyle(
+    fontSize: mediumFontSize + 10,
+    color: Colors.black,
+    fontWeight: FontWeight.bold,
+  );
+
   Divider get divider => Divider(thickness: 1.5);
 
   Widget receiptWidget([Key? key]) {
@@ -131,11 +137,11 @@ class ReceiptPrintableWid {
             children: [
               TableRow(
                 children: [
-                  Text("Item", style: mediumStyle),
-                  Center(child: Text("Qty", style: mediumStyle)),
+                  Text("Item", style: itemTextStyle),
+                  Center(child: Text("Qty", style: itemTextStyle)),
                   Align(
                     alignment: AlignmentGeometry.centerRight,
-                    child: Text("Amt", style: mediumStyle),
+                    child: Text("Amt", style: itemTextStyle),
                   ),
                 ],
               ),
@@ -153,18 +159,18 @@ class ReceiptPrintableWid {
               for (var e in receiptInfo.receiptItems)
                 TableRow(
                   children: [
-                    Text(e.itemName, style: mediumStyle),
+                    Text(e.itemName, style: itemTextStyle),
                     Center(
                       child: Text(
                         e.itemQuantity.thousandText(),
-                        style: mediumStyle,
+                        style: itemTextStyle,
                       ),
                     ),
                     Align(
                       alignment: AlignmentGeometry.centerRight,
                       child: Text(
                         e.itemAmount.thousandText(),
-                        style: mediumStyle,
+                        style: itemTextStyle,
                       ),
                     ),
                   ],

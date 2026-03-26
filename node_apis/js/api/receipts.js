@@ -15,7 +15,7 @@ const receiptItemsDBKeys = [
     'currentStatus',
     'updateOn',
     'updateBy',
-  
+
 ];
 
 
@@ -42,22 +42,21 @@ async function saveReceipt(receiptInfo) {
     };
 
 
-     const receiptItems = db.filerArrayListByFields((receiptInfo?.receiptItems || []), receiptItemsDBKeys);        
-        let itemQuery = db.generateInsert('mSaleItems', receiptItems);
-        await db.runMySQLQuery(itemQuery);
-        
+    const receiptItems = db.filerArrayListByFields((receiptInfo?.receiptItems || []), receiptItemsDBKeys);
+    let itemQuery = db.generateInsert('mSaleItems', receiptItems);
+    let resp0 = await db.runMySQLQuery(itemQuery);
 
 
+    if (resp0.queryStatus == true || resp0?.errorCode === 'ER_DUP_ENTRY') {
 
-    let query = `call saveReceiptInfo('${saleUID}', '${saleOn}', '${saleBy}', '${siteId}', '${totalItems}', '${totalAmount}', '${remark}', '${paymentMode}');`;
-    let resp1 = await db.runMySQLQuery(query);
-    if (resp1.dataCount == 1) {
-        output = resp1.data[0];
-       
+        let query = `call saveReceiptInfo('${saleUID}', '${saleOn}', '${saleBy}', '${siteId}', '${totalItems}', '${totalAmount}', '${remark}', '${paymentMode}');`;
+        let resp1 = await db.runMySQLQuery(query);
+        if (resp1.dataCount == 1) {
+            output = resp1.data[0];
+
+        }
 
     }
-
-
 
 
     return output;

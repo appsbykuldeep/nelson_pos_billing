@@ -51,14 +51,16 @@ class _WorkStaffSummaryScreenState extends State<WorkStaffSummaryScreen> {
       onPressEscape: KeyboardShortcut.back,
       child: Scaffold(
         appBar: AppBar(elevation: 0, title: const Text("Work Staff")),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: util.onAddEditWorkStaff,
-          label: const Text(
-            "Work Staff",
-            style: TextStyle(color: Colors.white),
-          ),
-          icon: const Icon(Icons.add, color: Colors.white),
-        ),
+        floatingActionButton: !util.userInfo.role.isOwner
+            ? null
+            : FloatingActionButton.extended(
+                onPressed: util.onAddEditWorkStaff,
+                label: const Text(
+                  "Work Staff",
+                  style: TextStyle(color: Colors.white),
+                ),
+                icon: const Icon(Icons.add, color: Colors.white),
+              ),
         backgroundColor: DesktopBodyWraperWid.backgroundColor,
         body: DesktopBodyWraperWid(
           child: ValueListenableBuilder(

@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pos_billing/common/classes/adaptive_image_provider.dart';
+import 'package:pos_billing/common/data_source/cache/salereceipt_info_cache_data.dart';
 import 'package:pos_billing/common/singletons/app.dart';
 import 'package:pos_billing/common/singletons/device_package_info.dart';
 import 'package:pos_billing/common/widgets/app_title_wid.dart';
@@ -225,8 +227,14 @@ class StandSettingsBody extends StatelessWidget {
                 ),
                 if (util.userRole.isOwnerOrAdmin)
                   OptionCategory(
-                    lable: "History",
+                    lable: "General",
                     children: [
+                      if (kDebugMode)
+                        OptionTile(
+                          title: "Work Staff",
+                          iconData: Icons.badge,
+                          onTap: util.onTapWorkStaffs,
+                        ),
                       OptionTile(
                         title: "Items",
                         iconData: Icons.category,
@@ -282,6 +290,26 @@ class StandSettingsBody extends StatelessWidget {
                         onTap: util.onTapShareApp,
                         // onTap: BasicNavigations.onTapShareApp,
                       ),
+
+                    ValueListenableBuilder(
+                      valueListenable:
+                          SalereceiptInfoCacheData.instance.isDBUpdatedNotifier,
+                      builder: (context, status, _) {
+                        return GestureDetector(
+                          child: OptionTile(
+                            title: "Cloud sync",
+                            iconData: Icons.cloud_sync_sharp,
+                            onTap:
+                                SalereceiptInfoCacheData.instance.syncLocalData,
+                            tralling: Icon(
+                              status.iconData,
+                              // size: 18,
+                              color: status.color ?? context.primaryColor,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                     OptionTile(
                       title: "Restart App",
                       iconData: Icons.restart_alt,

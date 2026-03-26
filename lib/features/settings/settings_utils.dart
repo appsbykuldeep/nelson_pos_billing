@@ -23,6 +23,7 @@ import 'package:pos_billing/features/login/login_screen.dart';
 import 'package:pos_billing/features/share_app/share_app_screen.dart';
 import 'package:pos_billing/features/sitewise_history/sitewise_history_screen.dart';
 import 'package:pos_billing/features/userwise_daily_sale/userwise_daily_sale_screen.dart';
+import 'package:pos_billing/features/working_staff_summary/working_staff_summary_page.dart';
 import 'package:pos_billing/main.dart';
 import 'package:restart_app/restart_app.dart';
 
@@ -58,6 +59,13 @@ class SettingsUtils implements StatefulUtil {
     App.to(
       (_) => ChangePasswordPage(),
       routeName: ChangePasswordPage.routeName,
+    );
+  }
+
+  void onTapWorkStaffs() {
+    App.to(
+      (_) => WorkStaffSummaryScreen(),
+      routeName: WorkStaffSummaryScreen.routeName,
     );
   }
 

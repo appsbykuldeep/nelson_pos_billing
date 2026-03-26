@@ -117,6 +117,37 @@ async function deleteItem(data) {
 }
 
 
+async function getWorkingStaffs(data) {
+    let paramKeys = ['siteId'];
+    let query = db.createProducreQuery('getWorkingStaffs',paramKeys,data);
+     return db.runMySQLQueryAndParseResult(query)   ;
+    
+}
+
+
+async function resetUserPassword(data) {
+    let paramKeys = ['staffId','siteId','userId'];
+    let query = db.createProducreQuery('resetUserPassword',paramKeys,data);
+      return db.runMySQLQueryAndParseResultByFirstArray(query)   ;
+    
+}
+
+async function removeSiteUser(data) {
+    let paramKeys = ['staffId','siteId','userId'];
+    let query = db.createProducreQuery('RemoveSiteUser',paramKeys,data);
+      return db.runMySQLQueryAndParseResultByFirstArray(query)   ;
+    
+}
+
+
+async function addUpdateSiteUser(data) {
+    let paramKeys = ['userId', 'siteId','fullName','userMobile','roleId','allowedItemsCSV','createBy'];
+    let query = db.createProducreQuery('addUpdateSiteUser',paramKeys,data);
+      return db.runMySQLQueryAndParseResultByFirstArray(query)   ;
+    
+}
+
+
 
 function registerEvensInSocket(socket) {
 
@@ -131,6 +162,22 @@ function registerEvensInSocket(socket) {
 
     socket.on(appEvents.deleteItem, async (data, callback) => {
         callback(await deleteItem(data));
+    });
+
+    socket.on(appEvents.getWorkingStaffs, async (data, callback) => {
+        callback(await getWorkingStaffs(data));
+    });
+
+    socket.on(appEvents.resetUserPassword, async (data, callback) => {
+        callback(await resetUserPassword(data));
+    });
+
+    socket.on(appEvents.removeSiteUser, async (data, callback) => {
+        callback(await removeSiteUser(data));
+    });
+
+    socket.on(appEvents.addUpdateSiteUser, async (data, callback) => {
+        callback(await addUpdateSiteUser(data));
     });
 
 
