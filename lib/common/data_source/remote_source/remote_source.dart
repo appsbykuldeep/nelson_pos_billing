@@ -4,6 +4,7 @@ import 'package:pos_billing/common/models/item/item_info.dart';
 import 'package:pos_billing/common/models/sale/receipt_info.dart';
 import 'package:pos_billing/common/models/sale_reports/itemwise_sale_report.dart';
 import 'package:pos_billing/common/models/sale_reports/user_wise_sale_report.dart';
+import 'package:pos_billing/common/models/workstaff/workstaff_info_model.dart';
 import 'package:pos_billing/common/singletons/login_ctrl.dart';
 import 'package:pos_billing/common/singletons/receipt_no_cache.dart';
 import 'package:pos_billing/config/constants/soket_events.dart';
@@ -76,6 +77,15 @@ class RemoteSource {
     );
 
     return ItemInfo.fetchList(data.resultData, fromServer: true);
+  }
+
+  Future<List<WorkstaffInfoModel>> getWorkingStaffs() async {
+    final data = await SocketIoHandler.emitWithResponseForCurrentUser(
+      SoketEvents.getWorkingStaffs,
+      {"siteId": _login.siteId},
+    );
+
+    return WorkstaffInfoModel.fetchList(data.resultData, fromServer: true);
   }
 
   Future<List<ItemInfo>> getActiveItems() async {

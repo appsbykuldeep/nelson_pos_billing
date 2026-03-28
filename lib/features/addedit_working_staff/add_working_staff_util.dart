@@ -3,9 +3,11 @@ part of 'add_working_staff_screen.dart';
 class AddWorkingStaffUtil extends StatefulUtil {
   final WorkingStaffMaster selectedWorkStaff;
   final bool isEditmode;
+  final List<ItemInfo> siteItems;
   AddWorkingStaffUtil({
     required this.selectedWorkStaff,
     required this.isEditmode,
+    required this.siteItems,
   });
 
   TextEditingController nameCtrl = TextEditingController();
@@ -17,12 +19,12 @@ class AddWorkingStaffUtil extends StatefulUtil {
   );
 
   ValueNotifier<List<int>> allowedVehicleCategoriesNotifier = ValueNotifier([]);
-  List<ItemInfo> standVehicleCategories = [];
+  // ValueNotifier<List<ItemInfo>> standVehicleCategories = ValueNotifier([]);
 
   late final SocketIoHandler soketIo = SocketIoHandler.getCurrentUserSoket();
 
   ValueNotifier<UserRole> selectedUserRole = ValueNotifier<UserRole>(
-    UserRole.none,
+    UserRole.staff,
   );
 
   final login = LoginUtil.instance;
@@ -33,12 +35,9 @@ class AddWorkingStaffUtil extends StatefulUtil {
 
   bool get isBlockedSelected => selectedStatus.value.isInactive;
 
-  Future<void> _setVehicleategoryMaster() async {
-    standVehicleCategories = <ItemInfo>{...login.currentItems.value}.toList();
-    // standVehicleCategories = (await db.getVehicalCategoryMaster())
-    //     .where((e) => e.standId > 0)
-    //     .toList();
-  }
+  // Future<void> _setVehicleategoryMaster() async {
+  //   standVehicleCategories.value = await RemoteSource.instnace.getActiveItems();
+  // }
 
   void onChangedVehicalCategory(bool? x, ItemInfo e) {
     final preList = [...allowedVehicleCategoriesNotifier.value];
@@ -82,11 +81,17 @@ class AddWorkingStaffUtil extends StatefulUtil {
     const content =
         "Would you like to <b>reset</b> the password to <b>12345</b> ?";
     if (!await makeconfirmation(content: content)) return;
-    final body = {"userId": selectedWorkStaff.userId};
+    final body = {
+      "staffId": selectedWorkStaff.userId,
+      "siteId": selectedWorkStaff.siteId,
+      "resetByUserId": user.userId,
+    };
+    LoadingDialogue.show();
     final resp = await soketIo.emitWithResponse(
       SoketEvents.resetUserPassword,
       body,
     );
+    LoadingDialogue.hide();
     // if (resp.resultStatus) {
     //   Get.back();
     // }
@@ -119,7 +124,7 @@ class AddWorkingStaffUtil extends StatefulUtil {
       // taking long way
       // It will also remove non active vehicle ids.
       final ac = allowedVehicleCategoriesNotifier.value;
-      allowedVehicleCategories = standVehicleCategories
+      allowedVehicleCategories = siteItems
           .where((e) => ac.contains(e.itemId))
           .map((e) => e.itemId)
           .toList();
@@ -127,20 +132,23 @@ class AddWorkingStaffUtil extends StatefulUtil {
 
     final body = {
       "userId": selectedWorkStaff.userId,
-      "fullName": name,
       "siteId": standInfo.siteId,
-      "mobile": mobile,
-      "RoleId": role.id,
-      "ActiveStatus": selectedStatus.value.id,
-      "allowedItemsForSale": allowedVehicleCategories.join(","),
+      "fullName": name,
+      "userMobile": mobile,
+      "roleId": role.id,
+      "currentStatus": selectedStatus.value.id,
+      "allowedItemsCSV": allowedVehicleCategories.join(","),
+      "createBy": user.userId,
     };
 
     if (!await makeconfirmation()) return;
 
+    LoadingDialogue.show();
     final resp = await soketIo.emitWithResponse(
-      SoketEvents.addEditWorkStaff,
+      SoketEvents.addUpdateSiteUser,
       body,
     );
+    LoadingDialogue.hide();
     if (resp.resultStatus) {
       App.back(true);
       resp.resultMessage.showToast;
@@ -159,12 +167,11 @@ class AddWorkingStaffUtil extends StatefulUtil {
     const content = "Do you want to <m>delete</m> this user ?";
     if (!await makeconfirmation(content: content)) return;
     LoadingDialogue.show();
-    final resp = await soketIo
-        .emitWithResponse(SoketEvents.deleteStandWorkStaff, {
-          "userId": selectedWorkStaff.userId,
-          "siteId": selectedWorkStaff.siteId,
-          "deleteByUserId": user.userId,
-        });
+    final resp = await soketIo.emitWithResponse(SoketEvents.removeSiteUser, {
+      "staffId": selectedWorkStaff.userId,
+      "siteId": selectedWorkStaff.siteId,
+      "deleteByUserId": user.userId,
+    });
     LoadingDialogue.hide();
     if (resp.resultStatus) {
       App.back(true);
@@ -183,7 +190,9 @@ class AddWorkingStaffUtil extends StatefulUtil {
   @override
   void onPageInit() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _setVehicleategoryMaster();
+      LoadingDialogue.show();
+      // await _setVehicleategoryMaster();
+      LoadingDialogue.hide();
       addEditSetup();
     });
   }

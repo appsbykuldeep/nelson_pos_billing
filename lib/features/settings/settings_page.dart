@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pos_billing/common/classes/adaptive_image_provider.dart';
 import 'package:pos_billing/common/data_source/cache/salereceipt_info_cache_data.dart';
@@ -229,12 +228,11 @@ class StandSettingsBody extends StatelessWidget {
                   OptionCategory(
                     lable: "General",
                     children: [
-                      if (kDebugMode)
-                        OptionTile(
-                          title: "Work Staff",
-                          iconData: Icons.badge,
-                          onTap: util.onTapWorkStaffs,
-                        ),
+                      OptionTile(
+                        title: "Work Staff",
+                        iconData: Icons.badge,
+                        onTap: util.onTapWorkStaffs,
+                      ),
                       OptionTile(
                         title: "Items",
                         iconData: Icons.category,

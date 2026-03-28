@@ -162,6 +162,8 @@ class _CreateReceiptScreenState extends State<CreateReceiptScreen> {
                         ],
                       ),
                     ),
+
+                  SizedBox(height: 150),
                 ]),
               );
             },

@@ -6,7 +6,6 @@ import 'package:pos_billing/common/models/basic/country_codes_model.dart';
 import 'package:pos_billing/common/models/basic/logged_user_info.dart';
 import 'package:pos_billing/common/models/basic/site_detail_model.dart';
 import 'package:pos_billing/common/models/basic/user_details_model.dart';
-import 'package:pos_billing/common/models/item/item_info.dart';
 import 'package:pos_billing/common/singletons/app.dart';
 import 'package:pos_billing/common/singletons/base_api_handler.dart';
 import 'package:pos_billing/common/singletons/country_picker_handler.dart';
@@ -46,7 +45,7 @@ class LoginUtil {
     Assets.imagesMalePerson,
   );
 
-  ValueNotifier<List<ItemInfo>> currentItems = ValueNotifier([]);
+  // ValueNotifier<List<ItemInfo>> currentItems = ValueNotifier([]);
 
   // Get Methods
 

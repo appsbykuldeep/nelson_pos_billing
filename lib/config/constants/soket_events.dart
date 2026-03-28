@@ -39,9 +39,9 @@ class SoketEvents {
   static const String getSaleHistoryWithItems = 'GetSaleHistoryWithItems';
   static const String getDailyItemWiseSaleReport = 'GetDailyItemWiseSaleReport';
   static const String updateOnlineStandUsers = 'UpdateOnlineStandUsers';
-  static const String addEditWorkStaff = 'AddEditWorkStaff';
+  // static const String addEditWorkStaff = 'AddEditWorkStaff';
   static const String emitEventToSiteUsers = 'EmitEventToSiteUsers';
-  static const String deleteStandWorkStaff = 'DeleteStandWorkStaff';
+  // static const String deleteStandWorkStaff = 'DeleteStandWorkStaff';
   static const String addUpdateItems = 'AddUpdateItems';
   static const String deleteItem = 'DeleteItem';
   static const String getWorkingStaffs = 'GetWorkingStaffs';

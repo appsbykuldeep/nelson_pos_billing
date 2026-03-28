@@ -14,6 +14,8 @@ class WorkingStaffSummaryUtil extends StatefulUtil {
 
   late SocketIoHandler _socketIoHandler;
 
+  List<ItemInfo> siteItems = [];
+
   List<WorkstaffInfoModel> get showWorkStaff =>
       (showWorkStaffNotifier.value ?? []);
 
@@ -21,6 +23,11 @@ class WorkingStaffSummaryUtil extends StatefulUtil {
     if (!isAutoRefresh) {
       showWorkStaffNotifier.value = null;
     }
+
+    showWorkStaffNotifier.value =
+        (await RemoteSource.instnace.getWorkingStaffs())
+            .where((e) => e.userId != userInfo.userId)
+            .toList();
 
     // showWorkStaffNotifier.value = (await DataProvider.instance
     //     .getWorkingStaffInfoList(
@@ -35,8 +42,12 @@ class WorkingStaffSummaryUtil extends StatefulUtil {
     }
 
     final status = await App.to(
-      (_) => WorkStaffPage(staff: staff),
+      (_) => WorkStaffPage(staff: staff,
+      
+      siteItems: siteItems,
+      ),
       routeName: WorkStaffPage.routeName,
+      
     );
     if (status != null && status == true) {
       LoadingDialogue.show();
@@ -61,6 +72,12 @@ class WorkingStaffSummaryUtil extends StatefulUtil {
   //   }
   // }
 
+  Future<void> getsiteItems() async {
+    LoadingDialogue.show();
+    siteItems = await RemoteSource.instnace.getActiveItems();
+    LoadingDialogue.hide();
+  }
+
   @override
   void onPageClose() {
     showWorkStaffNotifier.dispose();
@@ -82,6 +99,7 @@ class WorkingStaffSummaryUtil extends StatefulUtil {
       }
     });
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      await getsiteItems();
       await getWorkStaffList();
     });
   }

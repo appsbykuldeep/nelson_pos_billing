@@ -25,7 +25,8 @@ part 'add_working_staff_util.dart';
 
 class WorkStaffPage extends StatefulWidget {
   final WorkingStaffMaster? staff;
-  const WorkStaffPage({super.key, this.staff});
+  final List<ItemInfo> siteItems;
+  const WorkStaffPage({super.key, this.staff, required this.siteItems});
 
   static const String routeName = "/WorkStaffDetail";
 
@@ -43,6 +44,7 @@ class _WorkStaffPageState extends State<WorkStaffPage> {
     util = AddWorkingStaffUtil(
       isEditmode: widget.staff != null && widget.staff!.userId > 0,
       selectedWorkStaff: widget.staff ?? WorkingStaffMaster(),
+      siteItems: widget.siteItems,
     );
 
     util.onPageInit();
@@ -88,7 +90,7 @@ class _WorkStaffPageState extends State<WorkStaffPage> {
             onTap: util.onTapOutSide,
             child: SingleChildScrollView(
               padding: DesktopBodyWraperWid.isNotActive
-                  ? const EdgeInsets.fromLTRB(10, 10, 8, 40)
+                  ? const EdgeInsets.fromLTRB(10, 10, 8, 120)
                   : const EdgeInsets.fromLTRB(20, 20, 20, 120),
               child: Column(
                 children: [
@@ -220,51 +222,57 @@ class _WorkStaffPageState extends State<WorkStaffPage> {
                   AnimatedBuilder(
                     animation: Listenable.merge([
                       util.allowedVehicleCategoriesNotifier,
+
                       util.selectedUserRole,
                     ]),
                     builder: (context, child) {
                       final allowedVehicleCategories =
                           util.allowedVehicleCategoriesNotifier.value;
+                      final allItems = util.siteItems;
                       if (!util.selectedUserRole.value.isStaff ||
-                          util.standVehicleCategories.isEmpty) {
+                          allItems.isEmpty) {
                         return const SizedBox();
                       }
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 16,
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "\u2022 Allowed Parking Categories ?",
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
 
-                                style: lableStyle,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "\u2022 Allowed Billing Items ?",
+
+                                  style: lableStyle,
+                                ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-                            child: Column(
-                              children: [
-                                for (var e in util.standVehicleCategories)
-                                  _VehicleCategoryInfo(
-                                    e: e,
-                                    isSelected: allowedVehicleCategories
-                                        .contains(e.itemId),
-                                    onTap: util.onChangedVehicalCategory,
-                                  ),
-                              ],
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+                              child: Column(
+                                //  spacing: 16,
+                                children: [
+                                  for (var e in allItems)
+                                    _VehicleCategoryInfo(
+                                      e: e,
+                                      isSelected: allowedVehicleCategories
+                                          .contains(e.itemId),
+                                      onTap: util.onChangedVehicalCategory,
+                                    ),
+                                ],
+                              ),
                             ),
-                          ),
-                          GeneralStyledText(
-                            text:
-                                "<m>Note : </m>\nIf no category selected. Then all category will be allowed !",
+                            GeneralStyledText(
+                              text:
+                                  "<m>Note : </m>\nIf no item selected. Then all category will be allowed !",
 
-                            textStyle: theme.textTheme.bodySmall,
-                          ),
-                        ],
+                              textStyle: theme.textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
                       );
                     },
                   ),
@@ -358,7 +366,13 @@ class _VehicleCategoryInfo extends StatelessWidget {
             child: InkWell(
               onTap: () => onChangedCheckBox(!isSelected),
               child: Text.rich(
-                TextSpan(children: [TextSpan(text: e.itemName)]),
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: e.itemNameInEnglish.onNullOrEmpty(e.itemName),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

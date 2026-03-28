@@ -126,14 +126,15 @@ async function getWorkingStaffs(data) {
 
 
 async function resetUserPassword(data) {
-    let paramKeys = ['staffId','siteId','userId'];
+    let paramKeys = ['staffId','siteId','resetByUserId'];
     let query = db.createProducreQuery('resetUserPassword',paramKeys,data);
+    print(query);
       return db.runMySQLQueryAndParseResultByFirstArray(query)   ;
     
 }
 
 async function removeSiteUser(data) {
-    let paramKeys = ['staffId','siteId','userId'];
+    let paramKeys = ['staffId','siteId','deleteByUserId'];
     let query = db.createProducreQuery('RemoveSiteUser',paramKeys,data);
       return db.runMySQLQueryAndParseResultByFirstArray(query)   ;
     
@@ -141,7 +142,7 @@ async function removeSiteUser(data) {
 
 
 async function addUpdateSiteUser(data) {
-    let paramKeys = ['userId', 'siteId','fullName','userMobile','roleId','allowedItemsCSV','createBy'];
+    let paramKeys = ['userId', 'siteId','fullName','userMobile','roleId','allowedItemsCSV','createBy','currentStatus'];
     let query = db.createProducreQuery('addUpdateSiteUser',paramKeys,data);
       return db.runMySQLQueryAndParseResultByFirstArray(query)   ;
     

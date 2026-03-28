@@ -7,7 +7,9 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:pos_billing/common/abstract_classes/stateful_util.dart';
 import 'package:pos_billing/common/classes/adaptive_image_provider.dart';
 import 'package:pos_billing/common/classes/socketio_handler.dart';
+import 'package:pos_billing/common/data_source/remote_source/remote_source.dart';
 import 'package:pos_billing/common/dialogues/show_loading.dart';
+import 'package:pos_billing/common/models/item/item_info.dart';
 import 'package:pos_billing/common/models/workstaff/workstaff_info_model.dart';
 import 'package:pos_billing/common/models/workstaff/workstaffmaster_model.dart';
 import 'package:pos_billing/common/singletons/app.dart';
@@ -78,7 +80,7 @@ class _WorkStaffSummaryScreenState extends State<WorkStaffSummaryScreen> {
 
               return GroupedListView(
                 physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.only(bottom: 100),
+                padding: const EdgeInsets.only(bottom: 150),
                 shrinkWrap: true,
                 elements: showWorkStaff,
                 groupBy: (e) => e.role,
@@ -188,15 +190,16 @@ class _WorkStaffCard extends StatelessWidget {
                           ),
                           alignment: PlaceholderAlignment.middle,
                         ),
-                        WidgetSpan(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 5),
-                            child: OnlineOfflineIndicator(
-                              status: onedata.isOnline,
+                        if (1 == 0)
+                          WidgetSpan(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: OnlineOfflineIndicator(
+                                status: onedata.isOnline,
+                              ),
                             ),
+                            alignment: PlaceholderAlignment.middle,
                           ),
-                          alignment: PlaceholderAlignment.middle,
-                        ),
                         TextSpan(text: "\n${onedata.role.lable}"),
                         TextSpan(
                           text: " (${onedata.mobile})",
