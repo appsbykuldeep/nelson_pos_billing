@@ -26,7 +26,7 @@ class WorkingStaffSummaryUtil extends StatefulUtil {
 
     showWorkStaffNotifier.value =
         (await RemoteSource.instnace.getWorkingStaffs())
-            .where((e) => e.userId != userInfo.userId)
+            .where((e) => e.userId != userInfo.userId && !e.role.isOwner)
             .toList();
 
     // showWorkStaffNotifier.value = (await DataProvider.instance
@@ -42,12 +42,8 @@ class WorkingStaffSummaryUtil extends StatefulUtil {
     }
 
     final status = await App.to(
-      (_) => WorkStaffPage(staff: staff,
-      
-      siteItems: siteItems,
-      ),
+      (_) => WorkStaffPage(staff: staff, siteItems: siteItems),
       routeName: WorkStaffPage.routeName,
-      
     );
     if (status != null && status == true) {
       LoadingDialogue.show();

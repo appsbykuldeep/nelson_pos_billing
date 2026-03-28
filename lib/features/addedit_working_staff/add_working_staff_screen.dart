@@ -170,7 +170,7 @@ class _WorkStaffPageState extends State<WorkStaffPage> {
                                     value: x,
                                     description: switch (x) {
                                       UserRole.staff =>
-                                        "They can enter/exit vehicle, create pass & collect amount.",
+                                        "They can create ticket & collect amount.",
                                       UserRole.admin => "As similer as owner*.",
                                       _ => "",
                                     },
