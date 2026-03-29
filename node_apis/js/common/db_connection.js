@@ -104,7 +104,7 @@ async function mySQLQueryExecuter(query) {
 }
 
 
-async function runMySQLQuery(query, retryCount = 2,delayMS = 2000) {
+async function runMySQLQuery(query, retryCount = 0,delayMS = 2000) {
 
 
 
