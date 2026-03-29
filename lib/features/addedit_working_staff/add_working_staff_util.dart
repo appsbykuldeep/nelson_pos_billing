@@ -110,7 +110,7 @@ class AddWorkingStaffUtil extends StatefulUtil {
       return;
     }
 
-    if (mobile.length < 6) {
+    if (mobile.length < 6 && !isEditmode) {
       "Please create username with least 6 character.".showAlert;
       return;
     }

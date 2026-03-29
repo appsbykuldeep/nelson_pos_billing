@@ -62,41 +62,46 @@ class _ItemHistoryScreenState extends State<ItemHistoryScreen> {
 
             itemBuilder: (context, index) {
               final data = showItems[index];
-              return InkWell(
-                onTap: () => util.onTapItem(data),
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: index.isEven ? Colors.grey.shade200 : null,
-                  ),
-                  child: Row(
-                    spacing: 10,
-                    children: [
-                      Expanded(
-                        child: Text.rich(
-                          TextSpan(
-                            text: data.itemName,
-                            children: [
-                              if (data.itemNameInEnglish.isNotEmpty) ...[
-                                TextSpan(text: "\n"),
-                                TextSpan(
-                                  text: data.itemNameInEnglish,
+              return Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: index.isEven ? Colors.grey.shade200 : null,
+                ),
+                child: Row(
+                  spacing: 10,
+                  children: [
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(
+                          text: data.itemName,
+                          children: [
+                            if (data.itemNameInEnglish.isNotEmpty) ...[
+                              TextSpan(text: "\n"),
+                              TextSpan(
+                                text: data.itemNameInEnglish,
 
-                                  style: textTheme.bodyMedium,
-                                ),
-                              ],
+                                style: textTheme.bodyMedium,
+                              ),
                             ],
-                          ),
-                          style: textTheme.titleMedium,
+                          ],
                         ),
-                      ),
-
-                      Text(
-                        "Rs.${data.itemRate.thousandText()}",
                         style: textTheme.titleMedium,
                       ),
-                    ],
-                  ),
+                    ),
+
+                    Text(
+                      "Rs.${data.itemRate.thousandText()}",
+                      style: textTheme.titleMedium,
+                    ),
+                    InkWell(
+                      onTap: () => util.deleteItem(data),
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.red.shade100,
+                        child: Icon(Icons.delete, color: Colors.red, size: 24),
+                      ),
+                    ),
+                  ],
                 ),
               );
             },

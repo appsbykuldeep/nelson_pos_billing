@@ -31,7 +31,10 @@ class ItemHistoryUtil implements StatefulUtil {
   }
 
   Future<void> deleteItem(ItemInfo item) async {
-    if (!await makeconfirmation()) {
+    if (!await makeconfirmation(
+      content: 'Do you want to delete <b>${item.itemNameInEnglish}</b> ?',
+      useStyledText: true,
+    )) {
       return;
     }
 
