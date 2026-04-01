@@ -34,22 +34,36 @@ class ReceiptPrintableWid {
     return capturedImage;
   }
 
-  double get smallFontSize => 15;
-  double get mediumFontSize => 20;
-  double get largeFontSize => 28;
-  double get extralargeFontSize => 40;
+  double get smallFontSize =>
+      stand.siteConfigurations.printConfig.smallFontSize;
+  double get mediumFontSize =>
+      stand.siteConfigurations.printConfig.mediumFontSize;
+  double get largeFontSize =>
+      stand.siteConfigurations.printConfig.largeFontSize;
+  double get extralargeFontSize =>
+      stand.siteConfigurations.printConfig.extralargeFontSize;
+  double get siteNameFontSize =>
+      stand.siteConfigurations.printConfig.siteNameFontSize;
+  double get itemNameFontSize =>
+      stand.siteConfigurations.printConfig.itemNameFontSize;
+  // double get smallFontSize => 18;
+  // double get mediumFontSize => 20;
+  // double get largeFontSize => 28;
+  // double get extralargeFontSize => 40;
+  // double get siteNameFontSize => 25;
+  // double get itemNameFontSize => 30;
 
   double get receiptWidth =>
       BlueThurmalPrint.instance.selectedpaperSize.width.toDouble();
 
   TextStyle get siteNameStyle => TextStyle(
-    fontSize: 25,
+    fontSize: siteNameFontSize,
     color: Colors.black,
     fontWeight: FontWeight.bold,
     // letterSpacing: 1.1,
   );
   TextStyle get smallStyle => TextStyle(
-    fontSize: 18,
+    fontSize: smallFontSize,
     color: Colors.black,
     fontWeight: FontWeight.w400,
     height: 1.5,
@@ -61,7 +75,7 @@ class ReceiptPrintableWid {
   );
 
   TextStyle get itemTextStyle => TextStyle(
-    fontSize: mediumFontSize + 10,
+    fontSize: itemNameFontSize,
     color: Colors.black,
     fontWeight: FontWeight.bold,
   );
@@ -216,6 +230,13 @@ class ReceiptPrintableWid {
           //   style: siteNameStyle.copyWith(fontSize: 30),
           // ),
           divider,
+          if (stand.siteFooter.isNotEmpty)
+            Text(
+              stand.siteFooter,
+              style: siteNameStyle,
+              textAlign: TextAlign.center,
+            ),
+          SizedBox(height: 20),
 
           // Text("Thank You! Visit Again", style: mediumStyle),
         ],

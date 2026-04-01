@@ -14,6 +14,7 @@ import 'package:pos_billing/common/singletons/printer_ctrl.dart';
 import 'package:pos_billing/common/singletons/receipt_no_cache.dart';
 import 'package:pos_billing/common/singletons/unique_code_v2.dart';
 import 'package:pos_billing/config/enums/payment_mode.dart';
+import 'package:pos_billing/core/extensions/localdb_ext.dart';
 import 'package:pos_billing/core/extensions/string_ext.dart';
 
 class CreateReceiptUtil implements StatefulUtil {
@@ -105,6 +106,11 @@ class CreateReceiptUtil implements StatefulUtil {
     final user = login.userNotifier.value;
     if (items.isEmpty) {
       "Please add some items".showToast;
+      return;
+    }
+
+    if ("".boxBluetoothDeviceCustomInfo.isEmpty) {
+      "Please select printer first".showToast;
       return;
     }
 

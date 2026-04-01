@@ -10,6 +10,7 @@ class SiteDetail {
   final String siteName;
   final String siteAddressLine1;
   final String siteAddressLine2;
+  final String siteFooter;
   final String siteMobile;
   final String ownerName;
   final String ownerMobile;
@@ -31,6 +32,7 @@ class SiteDetail {
     this.siteName = '',
     this.siteAddressLine1 = '',
     this.siteAddressLine2 = '',
+    this.siteFooter = '',
     this.siteMobile = '',
     this.ownerName = '',
     this.ownerMobile = '',
@@ -77,6 +79,7 @@ class SiteDetail {
       siteName: parser.getString("siteName"),
       siteAddressLine1: parser.getString("siteAddressLine1"),
       siteAddressLine2: parser.getString("siteAddressLine2"),
+      siteFooter: parser.getString("siteFooter"),
       siteMobile: parser.getString("siteMobile"),
       ownerName: parser.getString("ownerName"),
       ownerMobile: parser.getString("ownerMobile"),
@@ -99,11 +102,13 @@ class SiteConfigurations {
   final int numberOfprints;
   final int printDelayInSec;
   final TokenDateConfig tokenDateConfig;
+  final PrintConfig printConfig;
   SiteConfigurations({
     required this.isActive,
     required this.numberOfprints,
     required this.printDelayInSec,
     required this.tokenDateConfig,
+    required this.printConfig,
   });
 
   static SiteConfigurations baseConfig() =>
@@ -141,6 +146,9 @@ class SiteConfigurations {
     } else {
       parser = ParseMapValue(input: {});
     }
+    final printConfig = PrintConfig.fromJson(
+      json.getMap<String, dynamic>("printConfig"),
+    );
 
     return SiteConfigurations(
       isActive: isActive ?? parser.getbool("isActive", true),
@@ -149,6 +157,7 @@ class SiteConfigurations {
       tokenDateConfig: TokenDateConfig.fromJson(
         json.getMap<String, dynamic>("tokenDateConfig"),
       ),
+      printConfig: printConfig,
     );
   }
 }
@@ -184,5 +193,47 @@ class TokenDateConfig {
       fyStartDay: parser.getint("fyStartDay", 1),
       fyStartMonth: parser.getint("fyStartMonth", 4),
     );
+  }
+}
+
+class PrintConfig {
+  final double smallFontSize;
+  final double mediumFontSize;
+  final double largeFontSize;
+  final double extralargeFontSize;
+  final double siteNameFontSize;
+  final double itemNameFontSize;
+
+  PrintConfig({
+    required this.smallFontSize,
+    required this.mediumFontSize,
+    required this.largeFontSize,
+    required this.extralargeFontSize,
+    required this.siteNameFontSize,
+    required this.itemNameFontSize,
+  });
+
+  factory PrintConfig.fromJson(Map<String, dynamic> json) {
+    final parser = ParseMapValue(input: json);
+
+    return PrintConfig(
+      smallFontSize: parser.getdouble("smallFontSize", 18),
+      mediumFontSize: parser.getdouble("mediumFontSize", 20),
+      largeFontSize: parser.getdouble("largeFontSize", 28),
+      extralargeFontSize: parser.getdouble("extralargeFontSize", 40),
+      siteNameFontSize: parser.getdouble("siteNameFontSize", 20),
+      itemNameFontSize: parser.getdouble("itemNameFontSize", 20),
+    );
+  }
+
+  @override
+  String toString() {
+    return '''PrintConfig(smallFontSize : $smallFontSize | 18
+    , mediumFontSize : $mediumFontSize | 20
+    , largeFontSize : $largeFontSize | 28
+    , extralargeFontSize : $extralargeFontSize | 40
+    , siteNameFontSize : $siteNameFontSize | 20
+    , itemNameFontSize : $itemNameFontSize | 20
+    )''';
   }
 }
