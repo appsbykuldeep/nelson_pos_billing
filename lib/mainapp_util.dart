@@ -27,7 +27,7 @@ class MainAppUtil extends StatefulUtil {
 
   void _setInstallTime() {
     if ("".boxInstallTime == "") {
-      final id = DateTime.now().custumDateFormat("yyMMddHHmmss");
+      final id = DateTime.now().dateTimeStanderedFormat;
       id.boxInstallTime;
     }
   }

@@ -7,7 +7,7 @@ extension KDLocalDb on String {
   String get boxPrinterPaperSize => _finder("PrinterPaperSize");
   String get boxActiveThemeID => _finder("ActiveThemeID");
   String get boxFullScreenMode => _finder("boxFullScreenMode");
-  String get boxInstallTime => _finder("boxInstallTime");
+  String get boxInstallTime => _finder("boxInstallTimeV2");
   String get boxCurrentCountryCallCode => _finder("boxCurrentCountryCallCode");
   String get boxLoggedUserInfo => _finder("boxLoggedUserInfo");
   String get boxCurrentUserDetails => _finder("boxCurrentUserDetails");

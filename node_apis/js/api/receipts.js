@@ -3,6 +3,7 @@ const { print } = require("../common/print_data");
 const { appEvents } = require('../common/soket_events');
 const app = require("../../index");
 const socketHelper = require("../soket/soket_helper");
+const time = require("../common/datetime");
 
 
 
@@ -19,6 +20,35 @@ const receiptItemsDBKeys = [
 ];
 
 
+
+async function saveSaleSyncLog(receiptInfo, tokenNumber = null, errorCode = null, errorMessage = null) {
+    try {
+
+
+        let saleUID = receiptInfo?.saleUID;
+        let saleOn = receiptInfo?.saleOn;
+        let saleBy = receiptInfo?.saleBy;
+        let siteId = receiptInfo?.siteId;
+        let totalItems = receiptInfo?.totalItems;
+        let totalAmount = receiptInfo?.totalAmount;
+        let paymentMode = receiptInfo?.paymentMode;
+        let syncOn = time.getCurrentTimeStamp(true);
+        let saleInfoJson = JSON.stringify(receiptInfo);
+        tokenNumber = tokenNumber || '';
+        errorCode = errorCode || '';
+        errorMessage = errorMessage || '';
+
+        let query = `INSERT INTO saleSyncLog(saleUID,tokenNumber,siteId,saleBy,saleOn,totalItems,totalAmount,paymentMode,syncOn,saleInfoJson,errorCode,errorMessage)
+VALUES ('${saleUID}','${tokenNumber}','${siteId}','${saleBy}','${saleOn}','${totalItems}','${totalAmount}','${paymentMode}','${syncOn}','${saleInfoJson}','${errorCode}','${errorMessage}');`;
+        await db.runMySQLQuery(db.cleanQuery(query));
+
+    } catch (error) {
+
+        return;
+
+    }
+
+}
 
 
 async function saveReceipt(receiptInfo) {
@@ -53,10 +83,19 @@ async function saveReceipt(receiptInfo) {
         let resp1 = await db.runMySQLQuery(query);
         if (resp1.dataCount == 1) {
             output = resp1.data[0];
-
+        } else {
+            output.errorCode = resp1?.errorCode;
+            output.errorMessage = resp1?.errorMessage;
         }
 
+    } else {
+        output.errorCode = resp0?.errorCode;
+        output.errorMessage = resp0?.errorMessage;
     }
+
+
+    saveSaleSyncLog(receiptInfo, output?.tokenNumber, output?.errorCode, output?.errorMessage);
+
 
 
     return output;

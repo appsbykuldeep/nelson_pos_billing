@@ -18,6 +18,7 @@ import 'package:pos_billing/common/singletons/login_ctrl.dart';
 import 'package:pos_billing/config/constants/soket_events.dart';
 import 'package:pos_billing/config/enums/api_progess.dart';
 import 'package:pos_billing/core/extensions/datetime_ext.dart';
+import 'package:pos_billing/core/extensions/localdb_ext.dart';
 import 'package:pos_billing/core/extensions/string_ext.dart';
 import 'package:pos_billing/core/functions/string_encryter.dart';
 import 'package:pos_billing/features/login/login_screen.dart';
@@ -116,6 +117,7 @@ class SocketIoHandler implements InitializedClass, DisposeClass {
       "deviceTimeZone": "${t0.timeZoneName}(${t0.timeZoneOffset.inMinutes})",
       "deviceINDTime": t0.toINDDateTime.dateTimeStanderedFormat,
       "isMasterUser": kDebugMode ? 1 : login.isMasteruser,
+      "appInstallOn": "".boxInstallTime,
     };
   }
 
